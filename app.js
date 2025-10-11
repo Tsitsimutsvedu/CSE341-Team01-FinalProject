@@ -1,15 +1,16 @@
 
 const express = require('express');
-const app = express();
-
 const dotenv = require('dotenv');
-dotenv.config(); // Load environment variables early
-
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
+
+// Load environment variables early
+dotenv.config();
+
+const app = express();
 
 // Route imports
 const authRoutes = require('./routes/auth');
@@ -49,11 +50,16 @@ app.use(
 );
 
 // MongoDB connection
-const MONGO_URI = process.env.MONGO_URI;
+const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3300;
 
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in environment variables.');
+  process.exit(1);
+}
+
 mongoose
-  .connect(MONGO_URI, {
+  .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
