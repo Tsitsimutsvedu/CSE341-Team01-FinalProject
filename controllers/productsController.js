@@ -3,6 +3,11 @@ const Product = require('../models/ProductsModel');
 const productsController = {};
 
 productsController.getAllProducts = async (req, res) => {
+    /*
+    #swagger.tags = ['Products']
+    #swagger.summary = 'Get all products'
+    #swagger.description = 'Retrieves a list of all products.'
+    */
   try {
     const products = await Product.find();
 
@@ -31,6 +36,11 @@ productsController.getAllProducts = async (req, res) => {
 };
 
 productsController.getProductById = async (req, res) => {
+      /*
+    #swagger.tags = ['Products']
+    #swagger.summary = 'Get product by ID'
+    #swagger.description = 'Retrieves a product by its ID.'
+    */
   const { id: productId } = req.params;
 
   try {
@@ -63,6 +73,11 @@ productsController.getProductById = async (req, res) => {
 };
 
 productsController.createNewProduct = async (req, res) => {
+      /*
+    #swagger.tags = ['Products']
+    #swagger.summary = 'Create a new product'
+    #swagger.description = 'Creates a new product.'
+    */
   const {
     name,
     price,
@@ -129,6 +144,11 @@ productsController.createNewProduct = async (req, res) => {
 };
 
 productsController.updateProductById = async (req, res) => {
+      /*
+    #swagger.tags = ['Products']
+    #swagger.summary = 'Update product by ID'
+    #swagger.description = 'Updates a product by its ID.'
+    */
   const { id: productId } = req.params;
   const {
     name,
@@ -218,6 +238,11 @@ productsController.updateProductById = async (req, res) => {
 };
 
 productsController.deleteProductById = async (req, res) => {
+      /*
+    #swagger.tags = ['Products']
+    #swagger.summary = 'Delete product by ID'
+    #swagger.description = 'Deletes a product by its ID.'
+    */
   const { id: productId } = req.params;
 
   try {

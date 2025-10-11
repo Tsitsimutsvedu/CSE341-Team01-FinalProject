@@ -24,6 +24,11 @@ router.get('/:id', verifyGoogleToken, authorizeAdminOrEmployee, validateUserId, 
 
 // Create a new user (open, or you can protect if needed)
 router.post('/', validateUserBody, validationRequests, async (req, res) => {
+	/*
+    #swagger.tags = ['Users']
+    #swagger.summary = 'Create a new user'
+    #swagger.description = 'Creates a new user.'
+    */
 	try {
 		const user = new User(req.body);
 		await user.save();
@@ -35,6 +40,11 @@ router.post('/', validateUserBody, validationRequests, async (req, res) => {
 
 // Update a user (admin only) - Tyler implemented but commenting for reference
 router.put('/:id', verifyGoogleToken, authorizeAdminOnly, [...validateUserId, ...validateUserBody], validationRequests, async (req, res) => {
+	/*
+    #swagger.tags = ['Users']
+    #swagger.summary = 'Update user by ID'
+    #swagger.description = 'Updates a user by its ID.'
+    */
 	try {
 		const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
 		if (!user) return res.status(404).json({ message: 'User not found' });
@@ -46,6 +56,11 @@ router.put('/:id', verifyGoogleToken, authorizeAdminOnly, [...validateUserId, ..
 
 // Delete a user (admin only) - Tyler implemented but commenting for reference
 router.delete('/:id', verifyGoogleToken, authorizeAdminOnly, validateUserId, validationRequests, async (req, res) => {
+	/*
+    #swagger.tags = ['Users']
+    #swagger.summary = 'Delete user by ID'
+    #swagger.description = 'Deletes a user by its ID.'
+    */
 	try {
 		const user = await User.findByIdAndDelete(req.params.id);
 		if (!user) return res.status(404).json({ message: 'User not found' });
