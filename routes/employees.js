@@ -27,7 +27,7 @@ router.get(
 );
 router.put(
   '/:id',
-  [...validateEmployeeId, ...validateEmployeeBody],
+  validateEmployeeId,
   validationRequests,
   employeesController.updateEmployee
 );
