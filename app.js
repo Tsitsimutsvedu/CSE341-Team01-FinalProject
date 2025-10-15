@@ -1,38 +1,42 @@
-const express = require('express');
-const app = express();
 
-const cookieParser = require('cookie-parser');
-const { connectDb } = require('./db/connect');
+const express = require('express');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
 
+// Load environment variables early
+dotenv.config();
+
+const app = express();
+
+// Route imports
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/productsRoute');
 const employeesRoute = require('./routes/employees');
 const storesRoute = require('./routes/stores');
 
-dotenv.config();
-
+// Remove unwanted Swagger paths
 delete swaggerDocument.paths['/auth/google'];
 delete swaggerDocument.paths['/auth/google/callback'];
 
-//middlewares
+// Middleware setup
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
-//Routes Mount
+// Route mounting
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/products', productRoutes);
 app.use('/employees', employeesRoute);
 app.use('/stores', storesRoute);
 
-//Api Doc
+// Swagger API docs
 app.use(
   '/api-docs',
   swaggerUi.serve,
@@ -45,19 +49,24 @@ app.use(
   })
 );
 
+// MongoDB connection
+const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3300;
 
-// Middleware for JSON parsing
-app.use(express.json());
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in environment variables.');
+  process.exit(1);
+}
 
-// (Optional) Enable CORS if our frontend is separate
-// const cors = require('cors');
-// app.use(cors());
-
-connectDb()
+mongoose
+  .connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
+    console.log('✅ Connected to MongoDB');
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log(`🚀 Server is running on port ${PORT}`);
     });
   })
   .catch((err) => {
